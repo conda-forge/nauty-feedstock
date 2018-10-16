@@ -1,4 +1,4 @@
-{% set version = "2.6.7" %}
+{% set version = "2.6.8" %}
 {% set version_list = version.split('.') %}
 {% set tarversion = version_list[0]+version_list[1]+'r'+version_list[2] %}
 {% set name = "nauty" %}
@@ -10,7 +10,7 @@ package:
 source:
   fn: {{ name }}-{{ tarversion }}.tar.gz
   url: http://users.cecs.anu.edu.au/~bdm/nauty/nauty{{ tarversion }}.tar.gz
-  sha256: 97b5648de17645895cbd56a9a0b3e23cf01f5332c476d013ea459f1a0363cdc6
+  sha256: 137808f2cf27fc99b93af18d1721f8a14e8e9ba80379c9fbc74a1efa4fd3644c
   patches:
     - minmax.patch
     - ar.patch
