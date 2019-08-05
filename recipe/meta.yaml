@@ -7,33 +7,40 @@ package:
   name: {{ name }}
   version: {{ version }}
 
-source:
-  fn: {{ name }}-{{ tarversion }}.tar.gz
-  url: http://users.cecs.anu.edu.au/~bdm/nauty/nauty{{ tarversion }}.tar.gz
-  sha256: 97b5648de17645895cbd56a9a0b3e23cf01f5332c476d013ea459f1a0363cdc6
-  patches:
-    - minmax.patch
-    - ar.patch
+source:                                                                       # [not win]
+  url: http://users.cecs.anu.edu.au/~bdm/nauty/nauty{{ tarversion }}.tar.gz   # [not win]
+  sha256: 97b5648de17645895cbd56a9a0b3e23cf01f5332c476d013ea459f1a0363cdc6    # [not win]
+  patches:              # [not win]
+    - minmax.patch      # [not win]
+    - ar.patch          # [not win]
 
 build:
-  number: 1000
+  number: 1001
   skip: true  # [win and vc<14]
 
 requirements:
   build:
     - {{ compiler('c') }}
     - clangdev              # [win]
+    - llvmdev               # [win]
     - lld                   # [win]
     - m2-make               # [win]
     - m2-automake-wrapper   # [win]
     - m2-libtool            # [win]
     - m2-autoconf           # [win]
+    - curl                  # [win]
+    - m2-patch              # [win]
+    - m2-tar                # [win]
     - posix                 # [win]
   host:
 
 test:
   commands:
     - addedgeg -help
+    - test -f $PREFIX/include/nauty/nauty.h                 # [unix]
+    - if not exist %LIBRARY_INC%/nauty/nauty.h exit 1       # [win]
+    - test -f $PREFIX/lib/libnauty.a                        # [unix]
+    - if not exist %LIBRARY_LIB%/nauty.lib exit 1           # [win]
 
 about:
   home: http://users.cecs.anu.edu.au/~bdm/nauty/
