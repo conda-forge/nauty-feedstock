@@ -5,3 +5,5 @@ max_py_ver: '37'
 max_r_ver: '35'
 travis:
   secure: {BINSTAR_TOKEN: v/VhH+cXbV/n7h421MTZIq++2/VdPMAR/74DpyAfA+D050x8Vnn3dTm1jqm/Jr1lSHSsY7SR7yWbawtyhAnSgpEWIhvS/h9/IJocbJTKpnexFwbetBB7BYM64jIG8PLzABkBO6gyMJKWBb5I2sHjbueX0n6oyFBx1bKPuCI0W00X3dfT3cfvM6uS6oFXiVy91W9+ERdHoJB7f+Gtc2YNp1GOcAc+QXCC3egaOCNHeHjT8mpCY9lr/VXjOtfWu10unTCC1rOT0yipL5d+Vn/QVfssWJlL8KSaMHBOatYE8fOlqNy9hKRMv7ldXTsW/Ry6mppfQnsDTEzqI+5YTPcR/dM4usdT4EEt0yJZG54hGhsNzOVKM9oEDnhaSJf07sp7s8VcAS8qPNMshKQZb6qQaeW6wcrxwIfT5dXLbLu/vlhHp7ovXv9WaAtIGjm71gX5BfqxN1iL32cCW0/jzbA+Z++XPzXV1c7wNLzk+hVTGbx29M8NsqYl5BhRAaCc+tDOh+4vv+IkKR+Xwj38lBlcY5Egqsttxcn2mqNzbZuoVOVrLoHUmVfTaxHi0iBmo0tICA/BHHf+aHNR5Z2aFerV0M8vyOivEksxp+tt1Tk03ubdKo4THVrAvpwQsB+9Fy5OuoijhHf31CvES+SdBXj5Ev2bseuSAaS78cqTy9tT3Fs=}
+provider:
+  win: azure
