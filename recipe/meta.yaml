@@ -30,9 +30,6 @@ requirements:
     - m2-automake-wrapper   # [win]
     - m2-libtool            # [win]
     - m2-autoconf           # [win]
-    - curl                  # [win]
-    - m2-patch              # [win]
-    - m2-tar                # [win]
     - posix                 # [win]
 
 test:
