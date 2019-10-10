@@ -43,7 +43,7 @@ test:
 
 about:
   home: http://users.cecs.anu.edu.au/~bdm/nauty/
-  license: other
+  license: Apache-2.0
   license_file: COPYRIGHT
   summary: nauty and Traces are programs for computing automorphism groups of graphs and digraphs.
 
