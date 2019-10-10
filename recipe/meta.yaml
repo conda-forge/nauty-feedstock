@@ -32,7 +32,6 @@ requirements:
     - m2-patch              # [win]
     - m2-tar                # [win]
     - posix                 # [win]
-  host:
 
 test:
   commands:
