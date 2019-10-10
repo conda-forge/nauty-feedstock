@@ -8,7 +8,7 @@ package:
   version: {{ version }}
 
 source:
-  url: http://users.cecs.anu.edu.au/~bdm/nauty/nauty{{ tarversion }}.tar.gz
+  url: http://pallini.di.uniroma1.it/nauty{{ tarversion }}.tar.gz
   sha256: 5ed401917f641af6bf7617a18561b8f1ff5d6563268d815a054786c1ceace617
   patches:
     - minmax.patch
