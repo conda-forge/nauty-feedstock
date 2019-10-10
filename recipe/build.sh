@@ -12,14 +12,6 @@ if [[ "$target_platform" == "win-64" ]]; then
     export CFLAGS="-MD -I$PREFIX/Library/include -O2"
     export LDFLAGS="$LDFLAGS -L$PREFIX/Library/lib"
     export LIBRARY_PREFIX=$PREFIX/Library
-    IFS='.' read -r -a VER_ARR <<< "$PKG_VERSION"
-    TARVERSION="${VER_ARR[0]}${VER_ARR[1]}r${VER_ARR[2]}"
-    curl -L -O http://users.cecs.anu.edu.au/~bdm/nauty/nauty${TARVERSION}.tar.gz
-    tar -xvf nauty${TARVERSION}.tar.gz
-    cd nauty${TARVERSION}
-    patch -p0 < $RECIPE_DIR/ar.patch
-    patch -p0 < $RECIPE_DIR/minmax.patch
-    cp COPYRIGHT ../COPYRIGHT
 else
     export CFLAGS="$CFLAGS -fPIC"
     export LIBRARY_PREFIX=$PREFIX

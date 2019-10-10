@@ -1,4 +1,4 @@
-{% set version = "2.6.7" %}
+{% set version = "2.6.11" %}
 {% set version_list = version.split('.') %}
 {% set tarversion = version_list[0]+version_list[1]+'r'+version_list[2] %}
 {% set name = "nauty" %}
@@ -7,15 +7,17 @@ package:
   name: {{ name }}
   version: {{ version }}
 
-source:                                                                       # [not win]
-  url: http://users.cecs.anu.edu.au/~bdm/nauty/nauty{{ tarversion }}.tar.gz   # [not win]
-  sha256: 97b5648de17645895cbd56a9a0b3e23cf01f5332c476d013ea459f1a0363cdc6    # [not win]
-  patches:              # [not win]
-    - minmax.patch      # [not win]
-    - ar.patch          # [not win]
+source:
+  url: http://pallini.di.uniroma1.it/nauty{{ tarversion }}.tar.gz  # [not win]
+  sha256: 5ed401917f641af6bf7617a18561b8f1ff5d6563268d815a054786c1ceace617  # [not win]
+  url: https://github.com/conda-forge/nauty-feedstock/files/3713871/nauty26r11.tar.gz  # [win]
+  sha256: d916e1a932d8e3cdee0e6bd3d3157d8c7ed859a0c62c9bb70c567bdef1e76443   # [win]
+  patches:
+    - minmax.patch
+    - ar.patch
 
 build:
-  number: 1001
+  number: 0
   skip: true  # [win and vc<14]
 
 requirements:
@@ -28,11 +30,7 @@ requirements:
     - m2-automake-wrapper   # [win]
     - m2-libtool            # [win]
     - m2-autoconf           # [win]
-    - curl                  # [win]
-    - m2-patch              # [win]
-    - m2-tar                # [win]
     - posix                 # [win]
-  host:
 
 test:
   commands:
@@ -44,10 +42,11 @@ test:
 
 about:
   home: http://users.cecs.anu.edu.au/~bdm/nauty/
-  license: other
+  license: Apache-2.0
   license_file: COPYRIGHT
   summary: nauty and Traces are programs for computing automorphism groups of graphs and digraphs.
 
 extra:
   recipe-maintainers:
     - isuruf
+    - saraedum

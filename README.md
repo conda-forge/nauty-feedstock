@@ -3,7 +3,7 @@ About nauty
 
 Home: http://users.cecs.anu.edu.au/~bdm/nauty/
 
-Package license: other
+Package license: Apache-2.0
 
 Feedstock license: BSD 3-Clause
 
@@ -15,14 +15,7 @@ Current build status
 ====================
 
 
-<table><tr>
-    <td>Appveyor</td>
-    <td>
-      <a href="https://ci.appveyor.com/project/conda-forge/nauty-feedstock/branch/master">
-        <img alt="windows" src="https://img.shields.io/appveyor/ci/conda-forge/nauty-feedstock/master.svg?label=Windows">
-      </a>
-    </td>
-  </tr>
+<table>
     
   <tr>
     <td>Azure</td>
@@ -62,7 +55,12 @@ Current build status
       </details>
     </td>
   </tr>
-![ppc64le disabled](https://img.shields.io/badge/ppc64le-disabled-lightgrey.svg)
+  <tr>
+    <td>Linux_ppc64le</td>
+    <td>
+      <img src="https://img.shields.io/badge/ppc64le-disabled-lightgrey.svg" alt="ppc64le disabled">
+    </td>
+  </tr>
 </table>
 
 Current release info
@@ -158,4 +156,5 @@ Feedstock Maintainers
 =====================
 
 * [@isuruf](https://github.com/isuruf/)
+* [@saraedum](https://github.com/saraedum/)
 
