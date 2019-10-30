@@ -23,6 +23,7 @@ build:
 requirements:
   build:
     - {{ compiler('c') }}
+    - make                  # [unix]
     - clangdev              # [win]
     - llvmdev               # [win]
     - lld                   # [win]
