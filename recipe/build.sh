@@ -57,4 +57,4 @@ do
 done
 
 mkdir -p "$LIBRARY_PREFIX"/include/nauty
-cp nauty.h "$LIBRARY_PREFIX"/include/nauty/nauty.h
+cp *.h "$LIBRARY_PREFIX"/include/nauty/

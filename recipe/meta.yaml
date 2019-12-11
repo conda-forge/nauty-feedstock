@@ -17,7 +17,7 @@ source:
     - ar.patch
 
 build:
-  number: 0
+  number: 1
   skip: true  # [win and vc<14]
 
 requirements:
@@ -38,6 +38,10 @@ test:
     - addedgeg -help
     - test -f $PREFIX/include/nauty/nauty.h                 # [unix]
     - if not exist %LIBRARY_INC%/nauty/nauty.h exit 1       # [win]
+    - test -f $PREFIX/include/nauty/traces.h                # [unix]
+    - if not exist %LIBRARY_INC%/nauty/traces.h exit 1      # [win]
+    - test -f $PREFIX/include/nauty/nausparse.h             # [unix]
+    - if not exist %LIBRARY_INC%/nauty/nausparse.h exit 1   # [win]
     - test -f $PREFIX/lib/libnauty.a                        # [unix]
     - if not exist %LIBRARY_LIB%/nauty.lib exit 1           # [win]
 
