@@ -1,12 +1,11 @@
---- nauty.h     2020-10-27 00:52:23.609766480 -0500
-+++ nauty.h     2020-10-27 00:52:32.925827788 -0500
-@@ -885,7 +885,7 @@
+--- nauty-h.in	2020-10-27 01:36:55.843670368 -0500
++++ nauty-h.in	2020-10-27 01:36:40.243532422 -0500
+@@ -886,7 +886,7 @@
  #define POPCOUNT(x) bs_popcount(x)
  #define BITMASK(x)  bs_bitmask(x)
  
 -#elif defined(_MSC_VER)
-+#elif 0
++#elif defined(_MSC_VER) && !defined(__clang__)
  #if _MSC_VER >= 1800
  #include <intrin.h>
  #else
-
