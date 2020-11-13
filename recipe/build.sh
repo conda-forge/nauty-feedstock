@@ -1,6 +1,4 @@
 #!/bin/bash
-# Get an updated config.sub and config.guess
-cp $BUILD_PREFIX/share/libtool/build-aux/config.* .
 
 export CFLAGS="-O2 -g $CFLAGS"
 
@@ -19,6 +17,8 @@ else
     export LIBRARY_PREFIX=$PREFIX
 fi
 
+sed -i.bak 's/popsup=0/popsup=0,popsup=0/g' configure.ac
+autoreconf -vfi
 ./configure  --disable-popcnt --disable-clz
 make
 
