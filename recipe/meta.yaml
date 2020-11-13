@@ -19,7 +19,8 @@ build:
 
 requirements:
   build:
-    - libtool  # [unix]
+    - autoconf  # [unix]
+    - libtool   # [unix]
     - {{ compiler('c') }}
     - make                  # [unix]
     - clangdev              # [win]
