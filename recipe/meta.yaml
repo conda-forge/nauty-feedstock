@@ -20,6 +20,7 @@ build:
 requirements:
   build:
     - autoconf  # [unix]
+    - automake  # [unix]
     - gettext   # [unix]
     - libtool   # [unix]
     - {{ compiler('c') }}
