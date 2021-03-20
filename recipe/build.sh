@@ -15,6 +15,9 @@ if [[ "$target_platform" == "win-64" ]]; then
 else
     export CFLAGS="$CFLAGS -fPIC"
     export LIBRARY_PREFIX=$PREFIX
+    # Get an updated config.sub and config.guess
+    cp $BUILD_PREFIX/share/gnuconfig/config.guess config.guess
+    cp $BUILD_PREFIX/share/gnuconfig/config.sub config.sub
 fi
 
 sed -i.bak 's/popsup=0/popsup=0,popsup=0/g' configure.ac
