@@ -19,6 +19,11 @@ build:
 
 requirements:
   build:
+    - autoconf  # [unix]
+    - automake  # [unix]
+    - gettext   # [unix]
+    - libtool   # [unix]
+    - gnuconfig   # [unix]
     - {{ compiler('c') }}
     - make                  # [unix]
     - clangdev              # [win]
