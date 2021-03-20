@@ -25,22 +25,26 @@ autoreconf -vfi
 ./configure  --disable-popcnt --disable-clz
 make
 
-check_output=`make checks`
-echo "$check_output"
-
 programs="addedgeg amtog biplabg catg complg converseg copyg cubhamg deledgeg delptg directg dreadnaut dretodot dretog \
   genbg genbgL geng genquarticg genrang genspecialg gentourng gentreeg hamheuristic labelg linegraphg listg multig newedgeg \
   planarg ranlabg showg subdivideg twohamg vcolg watercluster2 NRswitchg"
 
-if [[ "$target_platform" == "win-64" ]]; then
-    # countg and pickg are not supported on platforms with size(void*) != size(long)
-    if [[ "$check_output" != *"3 TESTS FAILED"* ]]; then
-      exit 1
+if [[ "$CONDA_BUILD_CROSS_COMPILATION" != "1" ]]; then
+    check_output=`make checks`
+    echo "$check_output"
+    if [[ "$target_platform" == "win-64" ]]; then
+        # countg and pickg are not supported on platforms with size(void*) != size(long)
+        if [[ "$check_output" != *"3 TESTS FAILED"* ]]; then
+          exit 1
+        fi
+    else
+        if [[ "$check_output" != *"PASSED ALL TESTS"* ]]; then
+          exit 1
+        fi
     fi
-else
-    if [[ "$check_output" != *"PASSED ALL TESTS"* ]]; then
-      exit 1
-    fi
+fi
+
+if [[ "$target_platform" != win-* ]]; then
     programs="$programs countg pickg shortg"
 fi
 
