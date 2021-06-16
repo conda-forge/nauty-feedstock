@@ -22,7 +22,7 @@ fi
 
 sed -i.bak 's/popsup=0/popsup=0,popsup=0/g' configure.ac
 autoreconf -vfi
-./configure  --disable-popcnt --disable-clz
+./configure --disable-popcnt --disable-clz --enable-generic
 make
 
 programs="addedgeg amtog biplabg catg complg converseg copyg cubhamg deledgeg delptg directg dreadnaut dretodot dretog \
