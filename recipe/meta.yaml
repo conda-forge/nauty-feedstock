@@ -1,4 +1,4 @@
-{% set version = "2.7.1" %}
+{% set version = "2.7.2" %}
 {% set version_list = version.split('.') %}
 {% set tarversion = version_list[0]+version_list[1]+'r'+version_list[2] %}
 {% set name = "nauty" %}
@@ -9,12 +9,12 @@ package:
 
 source:
   url: http://pallini.di.uniroma1.it/nauty{{ tarversion }}.tar.gz
-  sha256: 76ca5d196e402c83a987f90c28ff706bcc5a333bb4a8fbb979a62d3b99c34e77
+  sha256: ac814b04d38f891e546431bbd59ca5bc2d15cfa9fedd4bc168949e8cd6979117
   patches:
     - popcount.patch
 
 build:
-  number: 2
+  number: 0
   skip: true  # [win and vc<14]
 
 requirements:
