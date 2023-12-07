@@ -1,4 +1,4 @@
-{% set version = "2.8.6" %}
+{% set version = "2.8.8" %}
 {% set name = "nauty" %}
 
 package:
@@ -7,7 +7,7 @@ package:
 
 source:
   url: http://pallini.di.uniroma1.it/nauty{{ version.replace('.', '_') }}.tar.gz
-  sha256: f2ce98225ca8330f5bce35f7d707b629247e09dda15fc479dc00e726fee5e6fa
+  sha256: 159d2156810a6bb240410cd61eb641add85088d9f15c888cdaa37b8681f929ce
   patches:
     - popcount.patch
     - 0001-Add-missing-header-for-isatty-on-Windows.patch  # [win]
