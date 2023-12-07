@@ -10,6 +10,7 @@ source:
   sha256: f2ce98225ca8330f5bce35f7d707b629247e09dda15fc479dc00e726fee5e6fa
   patches:
     - popcount.patch
+    - 0001-Add-missing-header-for-isatty-on-Windows.patch  # [win]
 
 build:
   number: 0

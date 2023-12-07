@@ -1,0 +1,70 @@
+From 5927645217612a238b9cf0212fdc53360e7b40e9 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Julian=20R=C3=BCth?= <julian.rueth@fsfe.org>
+Date: Thu, 7 Dec 2023 08:25:21 +0200
+Subject: [PATCH] Add missing headers on Windows
+
+for isatty, exit, free
+---
+ delptg.c      | 3 +++
+ naututil-h.in | 1 +
+ showg.c       | 4 +---
+ 3 files changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/delptg.c b/delptg.c
+index 1ef7fa6..113d7f5 100644
+--- a/delptg.c
++++ b/delptg.c
+@@ -27,6 +27,7 @@
+ 
+ /*************************************************************************/
+ 
++#include <BaseTsd.h>
+ #include "gtools.h" 
+ 
+ static FILE *outfile;
+@@ -34,6 +35,8 @@ static nauty_counter nout;
+ static int outcode;
+ static boolean digraph,dolabel;
+ 
++typedef SSIZE_T ssize_t;
++
+ /**************************************************************************/
+ 
+ static void
+diff --git a/naututil-h.in b/naututil-h.in
+index e4ca6d9..82f217e 100644
+--- a/naututil-h.in
++++ b/naututil-h.in
+@@ -125,6 +125,7 @@ used, it is necessary to check they are correct.
+ #include "nauty.h"              /* which includes stdio.h */
+ #include "nausparse.h"
+ #include "naurng.h"
++#include <io.h>
+ /* At this point we can assume that <sys/types.h>, <unistd.h>, <stddef.h>,
+    <stdlib.h>, <string.h> or <strings.h> and <malloc.h> if necessary have
+    been included if they exist. */
+diff --git a/showg.c b/showg.c
+index 7ad051f..9c307df 100644
+--- a/showg.c
++++ b/showg.c
+@@ -52,6 +52,7 @@
+ 
+ #include <stdio.h>
+ #include <string.h>
++#include <stdlib.h>
+ 
+ /* gtools.h : General header for gtools programs. */
+ 
+@@ -145,9 +146,6 @@ int errno = 0;
+ #include <stdlib.h>
+ #else
+ #include <sys/types.h>
+-extern char *calloc();
+-extern char *malloc();
+-extern char *realloc();
+ #endif
+ 
+ #ifdef __alpha
+-- 
+2.43.0
+
