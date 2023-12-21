@@ -25,9 +25,9 @@ autoreconf -vfi
 ./configure --disable-popcnt --disable-clz --enable-generic --enable-tls
 make
 
-programs="addedgeg amtog biplabg catg complg converseg copyg cubhamg deledgeg delptg directg dreadnaut dretodot dretog \
-  genbg genbgL geng genquarticg genrang genspecialg gentourng gentreeg hamheuristic labelg linegraphg listg multig newedgeg \
-  planarg ranlabg showg subdivideg twohamg vcolg watercluster2 NRswitchg"
+programs="addedgeg amtog biplabg catg complg converseg copyg countneg cubhamg deledgeg delptg directg dreadnaut dretodot dretog \
+  genbg genbgL geng genktreeg genquarticg genrang genspecialg gentourng gentreeg hamheuristic labelg linegraphg listg multig newedgeg \
+  planarg ranlabg ransubg showg subdivideg twohamg vcolg watercluster2 NRswitchg"
 
 if [[ "$CONDA_BUILD_CROSS_COMPILATION" != "1" ]]; then
     check_output=`make checks`
