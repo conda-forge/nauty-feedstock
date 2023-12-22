@@ -13,7 +13,7 @@ source:
     - 0001-Add-missing-header-for-isatty-on-Windows.patch  # [win]
 
 build:
-  number: 0
+  number: 1
   skip: true  # [win]
 
 requirements:
