@@ -6,8 +6,8 @@ package:
   version: {{ version }}
 
 source:
-  url: http://pallini.di.uniroma1.it/nauty{{ version.replace('.', '_') }}.tar.gz
-  sha256: 9ac46554c5bb7ecd99601f3c8b4d7857b178059b3eb3a58676ccfdb9d959f403
+  url: https://pallini.di.uniroma1.it/nauty{{ version.replace('.', '_') }}.tar.gz
+  sha256: c97ab42bf48796a86a598bce3e9269047ca2b32c14fc23e07208a244fe52c4ee
   patches:
     - popcount.patch
     - 0001-Add-missing-header-for-isatty-on-Windows.patch  # [win]
