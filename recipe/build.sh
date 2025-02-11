@@ -21,6 +21,7 @@ else
 fi
 
 sed -i.bak 's/popsup=0/popsup=0,popsup=0/g' configure.ac
+rm aclocal.m4
 autoreconf -vfi
 ./configure --disable-popcnt --disable-clz --enable-generic --enable-tls
 make
