@@ -1,4 +1,4 @@
-{% set version = "2.8.8" %}
+{% set version = "2.8.9" %}
 {% set name = "nauty" %}
 
 package:
@@ -6,14 +6,14 @@ package:
   version: {{ version }}
 
 source:
-  url: http://pallini.di.uniroma1.it/nauty{{ version.replace('.', '_') }}.tar.gz
-  sha256: 159d2156810a6bb240410cd61eb641add85088d9f15c888cdaa37b8681f929ce
+  url: https://pallini.di.uniroma1.it/nauty{{ version.replace('.', '_') }}.tar.gz
+  sha256: c97ab42bf48796a86a598bce3e9269047ca2b32c14fc23e07208a244fe52c4ee
   patches:
     - popcount.patch
     - 0001-Add-missing-header-for-isatty-on-Windows.patch  # [win]
 
 build:
-  number: 1
+  number: 0
   skip: true  # [win]
 
 requirements:
@@ -24,6 +24,7 @@ requirements:
     - libtool   # [unix]
     - gnuconfig   # [unix]
     - {{ compiler('c') }}
+    - {{ stdlib("c") }}
     - make                  # [unix]
     - clangdev              # [win]
     - llvmdev               # [win]
