@@ -21,7 +21,6 @@ else
 fi
 
 sed -i.bak 's/popsup=0/popsup=0,popsup=0/g' configure.ac
-sed -i.bak 's@ uniqg@ ./uniqg@g' runalltests
 rm aclocal.m4
 autoreconf -vfi
 ./configure --disable-popcnt --disable-clz --enable-generic --enable-tls
@@ -35,6 +34,7 @@ programs="addedgeg addptg amtog ancestorg assembleg biplabg catg complg converse
   subdivideg twohamg underlyingg vcolg watercluster2 NRswitchg"
 
 if [[ "$CONDA_BUILD_CROSS_COMPILATION" != "1" ]]; then
+    export PATH="$PATH:$PWD"
     make checks || true
     check_output=`make checks || true`
     echo "$check_output"
