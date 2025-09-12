@@ -11,6 +11,7 @@ source:
   patches:
     - popcount.patch
     - 0001-Add-missing-header-for-isatty-on-Windows.patch  # [win]
+    - 0001-Disable-runtime-checks-when-cross-compiling.patch  # [build_platform != target_platform]
 
 build:
   number: 0
