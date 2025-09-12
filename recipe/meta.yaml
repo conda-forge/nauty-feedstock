@@ -48,7 +48,7 @@ test:
     - if not exist %LIBRARY_LIB%/nauty.lib exit 1           # [win]
 
 about:
-  home: http://users.cecs.anu.edu.au/~bdm/nauty/
+  home: https://pallini.di.uniroma1.it/
   license: Apache-2.0
   license_file: COPYRIGHT
   summary: nauty and Traces are programs for computing automorphism groups of graphs and digraphs.
