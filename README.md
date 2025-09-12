@@ -3,11 +3,13 @@ About nauty-feedstock
 
 Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/nauty-feedstock/blob/main/LICENSE.txt)
 
-Home: http://users.cecs.anu.edu.au/~bdm/nauty/
+Home: https://pallini.di.uniroma1.it/
 
 Package license: Apache-2.0
 
 Summary: nauty and Traces are programs for computing automorphism groups of graphs and digraphs.
+
+Documentation: https://pallini.di.uniroma1.it/Guide.html
 
 Current build status
 ====================
