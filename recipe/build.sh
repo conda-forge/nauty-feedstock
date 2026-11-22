@@ -25,13 +25,6 @@ autoreconf -vfi
 ./configure --disable-popcnt --disable-clz --enable-generic --enable-tls
 make
 
-programs="addedgeg addptg amtog ancestorg assembleg biplabg catg complg converseg copyg \
-  countg countneg cubhamg deledgeg delptg dimacs2g directg dreadnaut dretodot \
-  dretog edgetransg genbg genbgL geng gengL genposetg genquarticg genrang \
-  genspecialg gentourng gentreeg genktreeg hamheuristic labelg linegraphg listg \
-  multig nbrhoodg newedgeg pickg planarg productg ranlabg ransubg shortg showg \
-  subdivideg twohamg underlyingg vcolg watercluster2 NRswitchg"
-
 if [[ "$CONDA_BUILD_CROSS_COMPILATION" != "1" ]]; then
     export PATH="$PATH:$PWD"
     make checks || true
@@ -49,8 +42,10 @@ if [[ "$CONDA_BUILD_CROSS_COMPILATION" != "1" ]]; then
     fi
 fi
 
+programs="addedgeg addptg amtog ancestorg assembleg biplabg catg complg converseg copyg countg countneg cubhamg deledgeg delptg dimacs2g directg dreadnaut dretodot dretog edgetransg genbg genbgL geng gengL genktreeg genposetg genquarticg genrang genspecialg gentourng gentreeg hamheuristic labelg linegraphg listg multig nbrhoodg newedgeg NRswitchg pickg planarg productg ranlabg ransubg showg subdivideg twohamg underlyingg vcolg watercluster2"
+
 if [[ "$target_platform" != win-* ]]; then
-    programs="$programs countg pickg shortg"
+    programs="$programs shortg"
 fi
 
 mkdir -p "$LIBRARY_PREFIX"/bin
