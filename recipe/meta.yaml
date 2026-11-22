@@ -36,7 +36,7 @@ requirements:
     - m2-automake-wrapper   # [win]
     - m2-libtool            # [win]
     - m2-autoconf           # [win]
-    - posix                 # [win]
+    - m2-base               # [win]
 
 test:
   commands:
