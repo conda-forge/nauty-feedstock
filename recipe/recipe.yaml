@@ -1,0 +1,69 @@
+schema_version: 1
+
+context:
+  version: "2.9.3"
+  name: nauty
+
+package:
+  name: ${{ name }}
+  version: ${{ version }}
+
+source:
+  url: https://pallini.di.uniroma1.it/nauty${{ version | replace('.', '_') }}.tar.gz
+  sha256: 9fc4edae04f88a0f5883985be3b39cf7f898fd6cc96e96b9ee25452743cc1b5b
+  patches:
+    - popcount.patch
+    - if: win
+      then: 0001-Add-missing-header-for-isatty-on-Windows.patch
+    - if: win
+      then: 0002-Fix-BitScanReverse-misuse-in-MSVC-FIRSTBITNZ.patch
+    - if: win
+      then: 0003-Guard-unistd.h-in-POSIX-declaration-checks.patch
+    - if: win
+      then: 0004-Use-OBJEXT-for-object-file-names.patch
+    - if: build_platform != target_platform
+      then: 0001-Disable-runtime-checks-when-cross-compiling.patch
+
+build:
+  number: 1
+
+requirements:
+  build:
+    - ${{ compiler('c') }}
+    - ${{ stdlib("c") }}
+    - if: unix
+      then:
+        - autoconf
+        - automake
+        - libtool
+        - make
+    - if: win
+      then: autotools_clang_conda
+
+tests:
+  - script:
+      - addedgeg -help
+      - if: unix
+        then:
+          - test -f $PREFIX/include/nauty/nauty.h
+          - test -f $PREFIX/include/nauty/traces.h
+          - test -f $PREFIX/include/nauty/nausparse.h
+          - test -f $PREFIX/lib/libnauty.a
+      - if: win
+        then:
+          - if not exist %LIBRARY_INC%/nauty/nauty.h exit 1
+          - if not exist %LIBRARY_INC%/nauty/traces.h exit 1
+          - if not exist %LIBRARY_INC%/nauty/nausparse.h exit 1
+          - if not exist %LIBRARY_LIB%/nauty.lib exit 1
+
+about:
+  license: Apache-2.0
+  license_file: COPYRIGHT
+  summary: nauty and Traces are programs for computing automorphism groups of graphs and digraphs.
+  homepage: https://pallini.di.uniroma1.it/
+  documentation: https://pallini.di.uniroma1.it/Guide.html
+
+extra:
+  recipe-maintainers:
+    - isuruf
+    - saraedum
