@@ -1,69 +1,37 @@
 #!/bin/bash
+set -ex
 
-export CFLAGS="-O2 -g $CFLAGS"
-
-if [[ "$target_platform" == "win-64" ]]; then
-    export PATH="$PREFIX/Library/bin:$BUILD_PREFIX/Library/bin:$PATH"
+if [[ "$target_platform" == win-* ]]; then
     export CC=clang-cl
-    export RANLIB=llvm-ranlib
-    export AS=llvm-as
-    export AR=llvm-ar
-    export LD=lld-link
-    export CFLAGS="-MD -I$PREFIX/Library/include -O2"
-    export LDFLAGS="$LDFLAGS -L$PREFIX/Library/lib"
-    export LIBRARY_PREFIX=$PREFIX/Library
-else
-    export CFLAGS="$CFLAGS -fPIC"
-    export LIBRARY_PREFIX=$PREFIX
-    # Get an updated config.sub and config.guess
-    cp $BUILD_PREFIX/share/gnuconfig/config.guess config.guess
-    cp $BUILD_PREFIX/share/gnuconfig/config.sub config.sub
+    export CFLAGS="-MD -O2"
+    export CPPFLAGS=
+    export LDFLAGS=
 fi
 
-rm aclocal.m4
 autoreconf -vfi
-./configure --disable-popcnt --disable-clz --enable-generic --enable-tls
+
+# --disable-shared: we only build static because nauty originally didn't
+# support dynamic libraries; enabling it would require us to run_exports more
+# strictly because the soname changes with each release. Also the Windows setup
+# cannot build a shared library because the headers have no dllimport setup.
+./configure --prefix="$PREFIX" \
+            --includedir='${prefix}/include/nauty' \
+            --disable-shared \
+            --disable-popcnt --disable-clz --enable-generic --enable-tls
 make
 
-if [[ "$CONDA_BUILD_CROSS_COMPILATION" != "1" ]]; then
-    export PATH="$PATH:$PWD"
-    make checks || true
-    check_output=`make checks || true`
-    echo "$check_output"
-    if [[ "$target_platform" == "win-64" ]]; then
-        # countg and pickg are not supported on platforms with size(void*) != size(long)
-        if [[ "$check_output" != *"3 TESTS FAILED"* ]]; then
-          exit 1
-        fi
-    else
-        if [[ "$check_output" != *"PASSED ALL TESTS"* ]]; then
-          exit 1
-        fi
-    fi
+if [[ "${CONDA_BUILD_CROSS_COMPILATION:-}" != "1" || "${CROSSCOMPILING_EMULATOR:-}" != "" ]]; then
+    make checks
 fi
 
-programs="addedgeg addptg amtog ancestorg assembleg biplabg catg complg converseg copyg countg countneg cubhamg deledgeg delptg dimacs2g directg dreadnaut dretodot dretog edgetransg genbg genbgL geng gengL genktreeg genposetg genquarticg genrang genspecialg gentourng gentreeg hamheuristic labelg linegraphg listg multig nbrhoodg newedgeg NRswitchg pickg planarg productg ranlabg ransubg showg subdivideg twohamg underlyingg vcolg watercluster2"
+make install
 
-if [[ "$target_platform" != win-* ]]; then
-    programs="$programs shortg"
+# The libraries are static and have no dependencies; nothing should link
+# through libtool archives from the package.
+rm -f "$PREFIX"/lib/*.la
+
+if [[ "$target_platform" == win-* ]]; then
+    # The .pc files record the build prefix in MSYS form (/c/...), which conda
+    # does not relocate; make them relative to their own location instead.
+    sed -i 's|^prefix=.*|prefix=${pcfiledir}/../..|' "$PREFIX"/lib/pkgconfig/*.pc
 fi
-
-mkdir -p "$LIBRARY_PREFIX"/bin
-for program in $programs;
-do
-  cp -p $program "$LIBRARY_PREFIX"/bin/$program
-done
-
-mkdir -p "$LIBRARY_PREFIX"/lib
-libs="nauty nauty1 nautyL nautyL1 nautyW nautyW1"
-for lib in $libs;
-do
-  if [[ "$target_platform" == "win-64" ]]; then
-    cp -p $lib.a "$LIBRARY_PREFIX"/lib/$lib.lib
-  else
-    cp -p $lib.a "$LIBRARY_PREFIX"/lib/lib$lib.a
-  fi
-done
-
-mkdir -p "$LIBRARY_PREFIX"/include/nauty
-cp *.h "$LIBRARY_PREFIX"/include/nauty/
