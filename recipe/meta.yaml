@@ -14,8 +14,7 @@ source:
     - 0001-Disable-runtime-checks-when-cross-compiling.patch  # [build_platform != target_platform]
 
 build:
-  number: 0
-  skip: true  # [win]
+  number: 1
 
 requirements:
   build:
