@@ -1,0 +1,597 @@
+From 378689a835c91a34778417b01c36da892791014c Mon Sep 17 00:00:00 2001
+From: claude <noreply@anthropic.com>
+Date: Sun, 22 Nov 2026 19:10:16 +0000
+Subject: [PATCH 2/2] Use $(OBJEXT) for object file names
+
+makefile.in hard-coded .o object names, and configure.ac set the suffix
+the program rules link against (osuffix) to .o for static builds. With
+MSVC-style compilers (clang-cl) libtool names objects .obj, so linking
+failed with LNK1181.
+---
+ configure.ac |   2 +-
+ makefile.in  | 273 ++++++++++++++++++++++++++-------------------------
+ 2 files changed, 138 insertions(+), 137 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 6d2e139..6911eac 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -574,7 +574,7 @@ AC_SUBST(have_gunzip)
+ LT_INIT
+ AC_SUBST([enable_static])
+ AS_IF([test "x$enable_static" = "xyes"],
+-      [osuffix=".o" ; olist=""],
++      [osuffix=".$OBJEXT" ; olist=""],
+       [osuffix=".lo" ; olist="L"])
+ AC_SUBST([osuffix])
+ AC_SUBST([olist])
+diff --git a/makefile.in b/makefile.in
+index da077f0..df0c5d5 100644
+--- a/makefile.in
++++ b/makefile.in
+@@ -10,6 +10,7 @@ LDFLAGS=@LDFLAGS@ @LIBS@
+ TESTPROGS=@testprogs@
+ NAUTESTS=@nautests@
+ EXEEXT=@EXEEXT@
++OBJEXT=@OBJEXT@
+ 
+ XO=@osuffix@
+ # CRYPTOLIB=@crypto_lib@
+@@ -70,17 +71,17 @@ nautybits : dreadnaut ${GLIBS} ;
+ 
+ gtoolsbits : ${GTOOLS} ;
+ 
+-NAUTYO=nauty.o nautil.o nausparse.o naugraph.o schreier.o naurng.o
+-NAUTY1O=nauty1.o nautil1.o nausparse.o naugraph1.o schreier.o naurng.o
+-NAUTYSO=nautyS.o nautilS.o nausparseS.o naugraphS.o schreierS.o naurng.o
+-NAUTYS1O=nautyS1.o nautilS1.o nausparseS.o naugraphS1.o schreierS.o naurng.o
+-NAUTYWO=nautyW.o nautilW.o nausparseW.o naugraphW.o schreierW.o naurng.o
+-NAUTYW1O=nautyW1.o nautilW1.o nausparseW.o naugraphW1.o schreierW.o naurng.o
+-NAUTYLO=nautyL.o nautilL.o nausparseL.o naugraphL.o schreierL.o naurng.o
+-NAUTYL1O=nautyL1.o nautilL1.o nausparseL.o naugraphL1.o schreierL.o naurng.o
+-NAUTYQO=nautyQ.o nautilQ.o nausparseQ.o naugraphQ.o schreierQ.o naurng.o
+-NAUTYQ1O=nautyQ1.o nautilQ1.o nausparseQ.o naugraphQ1.o schreierQ.o naurng.o
+-GTOOLSO=${NAUTYO} gtnauty.o nautinv.o gtools.o
++NAUTYO=nauty.$(OBJEXT) nautil.$(OBJEXT) nausparse.$(OBJEXT) naugraph.$(OBJEXT) schreier.$(OBJEXT) naurng.$(OBJEXT)
++NAUTY1O=nauty1.$(OBJEXT) nautil1.$(OBJEXT) nausparse.$(OBJEXT) naugraph1.$(OBJEXT) schreier.$(OBJEXT) naurng.$(OBJEXT)
++NAUTYSO=nautyS.$(OBJEXT) nautilS.$(OBJEXT) nausparseS.$(OBJEXT) naugraphS.$(OBJEXT) schreierS.$(OBJEXT) naurng.$(OBJEXT)
++NAUTYS1O=nautyS1.$(OBJEXT) nautilS1.$(OBJEXT) nausparseS.$(OBJEXT) naugraphS1.$(OBJEXT) schreierS.$(OBJEXT) naurng.$(OBJEXT)
++NAUTYWO=nautyW.$(OBJEXT) nautilW.$(OBJEXT) nausparseW.$(OBJEXT) naugraphW.$(OBJEXT) schreierW.$(OBJEXT) naurng.$(OBJEXT)
++NAUTYW1O=nautyW1.$(OBJEXT) nautilW1.$(OBJEXT) nausparseW.$(OBJEXT) naugraphW1.$(OBJEXT) schreierW.$(OBJEXT) naurng.$(OBJEXT)
++NAUTYLO=nautyL.$(OBJEXT) nautilL.$(OBJEXT) nausparseL.$(OBJEXT) naugraphL.$(OBJEXT) schreierL.$(OBJEXT) naurng.$(OBJEXT)
++NAUTYL1O=nautyL1.$(OBJEXT) nautilL1.$(OBJEXT) nausparseL.$(OBJEXT) naugraphL1.$(OBJEXT) schreierL.$(OBJEXT) naurng.$(OBJEXT)
++NAUTYQO=nautyQ.$(OBJEXT) nautilQ.$(OBJEXT) nausparseQ.$(OBJEXT) naugraphQ.$(OBJEXT) schreierQ.$(OBJEXT) naurng.$(OBJEXT)
++NAUTYQ1O=nautyQ1.$(OBJEXT) nautilQ1.$(OBJEXT) nausparseQ.$(OBJEXT) naugraphQ1.$(OBJEXT) schreierQ.$(OBJEXT) naurng.$(OBJEXT)
++GTOOLSO=${NAUTYO} gtnauty.$(OBJEXT) nautinv.$(OBJEXT) gtools.$(OBJEXT)
+ 
+ LNAUTYO=nauty.lo nautil.lo nausparse.lo naugraph.lo schreier.lo naurng.lo
+ LNAUTY1O=nauty1.lo nautil1.lo nausparse.lo naugraph1.lo schreier.lo naurng.lo
+@@ -106,378 +107,378 @@ XNAUTYQO=${@olist@NAUTYQO}
+ XNAUTYQ1O=${@olist@NAUTYQ1O}
+ XGTOOLSO=${@olist@GTOOLSO}
+ 
+-nauty.o : nauty.lo ;
++nauty.$(OBJEXT) : nauty.lo ;
+ nauty.lo : nauty.h schreier.h nauty.c
+ 	${CCOBJ} nauty.c
+-nauty1.o : nauty1.lo ;
++nauty1.$(OBJEXT) : nauty1.lo ;
+ nauty1.lo : nauty.h schreier.h nauty.c
+ 	${CCOBJ} ${SMALL} nauty.c
+-nautyS.o : nautyS.lo ;
++nautyS.$(OBJEXT) : nautyS.lo ;
+ nautyS.lo : nauty.h schreier.h nauty.c
+ 	${CCOBJ} ${S} nauty.c
+-nautyS1.o : nautyS1.lo ;
++nautyS1.$(OBJEXT) : nautyS1.lo ;
+ nautyS1.lo : nauty.h schreier.h nauty.c
+ 	${CCOBJ} ${S1} nauty.c
+-nautyW.o : nautyW.lo ;
++nautyW.$(OBJEXT) : nautyW.lo ;
+ nautyW.lo : nauty.h schreier.h nauty.c
+ 	${CCOBJ} ${W} nauty.c
+-nautyW1.o : nautyW1.lo ;
++nautyW1.$(OBJEXT) : nautyW1.lo ;
+ nautyW1.lo : nauty.h schreier.h nauty.c
+ 	${CCOBJ} ${W1} nauty.c
+-nautyL.o : nautyL.lo ;
++nautyL.$(OBJEXT) : nautyL.lo ;
+ nautyL.lo : nauty.h schreier.h nauty.c
+ 	${CCOBJ} ${L} nauty.c
+-nautyL1.o : nautyL1.lo ;
++nautyL1.$(OBJEXT) : nautyL1.lo ;
+ nautyL1.lo : nauty.h schreier.h nauty.c
+ 	${CCOBJ} ${L1} nauty.c
+-nautyQ.o : nautyL.lo ;
++nautyQ.$(OBJEXT) : nautyL.lo ;
+ nautyQ.lo : nauty.h schreier.h nauty.c
+ 	${CCOBJ} ${Q} nauty.c
+-nautyQ1.o : nautyQ1.lo ;
++nautyQ1.$(OBJEXT) : nautyQ1.lo ;
+ nautyQ1.lo : nauty.h schreier.h nauty.c
+ 	${CCOBJ} ${Q1} nauty.c
+ 
+-nautil.o : nautil.lo ;
++nautil.$(OBJEXT) : nautil.lo ;
+ nautil.lo : nauty.h nautil.c sorttemplates.c
+ 	${CCOBJ} nautil.c
+-nautil1.o : nautil1.lo ;
++nautil1.$(OBJEXT) : nautil1.lo ;
+ nautil1.lo : nauty.h nautil.c sorttemplates.c
+ 	${CCOBJ} ${SMALL} nautil.c
+-nautilS.o : nautilS.lo ;
++nautilS.$(OBJEXT) : nautilS.lo ;
+ nautilS.lo : nauty.h nautil.c sorttemplates.c
+ 	${CCOBJ} ${S} nautil.c
+-nautilS1.o : nautilS1.lo ;
++nautilS1.$(OBJEXT) : nautilS1.lo ;
+ nautilS1.lo : nauty.h nautil.c sorttemplates.c
+ 	${CCOBJ} ${S1} nautil.c
+-nautilW.o : nautilW.lo ;
++nautilW.$(OBJEXT) : nautilW.lo ;
+ nautilW.lo : nauty.h nautil.c sorttemplates.c
+ 	${CCOBJ} ${W} nautil.c
+-nautilW1.o : nautilW1.lo ;
++nautilW1.$(OBJEXT) : nautilW1.lo ;
+ nautilW1.lo : nauty.h nautil.c sorttemplates.c
+ 	${CCOBJ} ${W1} nautil.c
+-nautilL.o : nautilL.lo ;
++nautilL.$(OBJEXT) : nautilL.lo ;
+ nautilL.lo : nauty.h nautil.c sorttemplates.c
+ 	${CCOBJ} ${L} nautil.c
+-nautilL1.o : nautilL1.lo ;
++nautilL1.$(OBJEXT) : nautilL1.lo ;
+ nautilL1.lo : nauty.h nautil.c sorttemplates.c
+ 	${CCOBJ} ${L1} nautil.c
+-nautilQ.o : nautilQ.lo ;
++nautilQ.$(OBJEXT) : nautilQ.lo ;
+ nautilQ.lo : nauty.h nautil.c sorttemplates.c
+ 	${CCOBJ} ${Q} nautil.c
+-nautilQ1.o : nautilQ1.lo ;
++nautilQ1.$(OBJEXT) : nautilQ1.lo ;
+ nautilQ1.lo : nauty.h nautil.c sorttemplates.c
+ 	${CCOBJ} ${Q1} nautil.c
+ 
+-naugraph.o : naugraph.lo ;
++naugraph.$(OBJEXT) : naugraph.lo ;
+ naugraph.lo : nauty.h naugraph.c
+ 	${CCOBJ} naugraph.c
+-naugraph1.o : naugraph1.lo ;
++naugraph1.$(OBJEXT) : naugraph1.lo ;
+ naugraph1.lo : nauty.h naugraph.c
+ 	${CCOBJ} ${SMALL} naugraph.c
+-naugraphS.o : naugraphS.lo ;
++naugraphS.$(OBJEXT) : naugraphS.lo ;
+ naugraphS.lo : nauty.h naugraph.c
+ 	${CCOBJ} ${S} naugraph.c
+-naugraphS1.o : naugraphS1.lo ;
++naugraphS1.$(OBJEXT) : naugraphS1.lo ;
+ naugraphS1.lo : nauty.h naugraph.c
+ 	${CCOBJ} ${S1} naugraph.c
+-naugraphW.o : naugraphW.lo ;
++naugraphW.$(OBJEXT) : naugraphW.lo ;
+ naugraphW.lo : nauty.h naugraph.c
+ 	${CCOBJ} ${W} naugraph.c
+-naugraphW1.o : naugraphW1.lo ;
++naugraphW1.$(OBJEXT) : naugraphW1.lo ;
+ naugraphW1.lo : nauty.h naugraph.c
+ 	${CCOBJ} ${W1} naugraph.c
+-naugraphL.o : naugraphL.lo ;
++naugraphL.$(OBJEXT) : naugraphL.lo ;
+ naugraphL.lo : nauty.h naugraph.c
+ 	${CCOBJ} ${L} naugraph.c
+-naugraphL1.o : naugraphL1.lo ;
++naugraphL1.$(OBJEXT) : naugraphL1.lo ;
+ naugraphL1.lo : nauty.h naugraph.c
+ 	${CCOBJ} ${L1} naugraph.c
+-naugraphQ.o : naugraphQ.lo ;
++naugraphQ.$(OBJEXT) : naugraphQ.lo ;
+ naugraphQ.lo : nauty.h naugraph.c
+ 	${CCOBJ} ${Q} naugraph.c
+-naugraphQ1.o : naugraphQ1.lo ;
++naugraphQ1.$(OBJEXT) : naugraphQ1.lo ;
+ naugraphQ1.lo : nauty.h naugraph.c
+ 	${CCOBJ} ${Q1} naugraph.c
+ 
+-naututil.o : naututil.lo ;
++naututil.$(OBJEXT) : naututil.lo ;
+ naututil.lo : nauty.h naututil.h nausparse.h gtools.h naututil.c
+ 	${CCOBJ} naututil.c
+-naututil1.o : naututil1.lo ;
++naututil1.$(OBJEXT) : naututil1.lo ;
+ naututil1.lo : nauty.h naututil.h nausparse.h gtools.h naututil.c
+ 	${CCOBJ} ${SMALL} naututil.c
+-naututilS.o : naututilS.lo ;
++naututilS.$(OBJEXT) : naututilS.lo ;
+ naututilS.lo : nauty.h naututil.h nausparse.h gtools.h naututil.c 
+ 	${CCOBJ} ${S} naututil.c
+-naututilS1.o : naututilS1.lo ;
++naututilS1.$(OBJEXT) : naututilS1.lo ;
+ naututilS1.lo : nauty.h naututil.h nausparse.h gtools.h naututil.c
+ 	${CCOBJ} ${S1} naututil.c
+-naututilW.o : naututilW.lo ;
++naututilW.$(OBJEXT) : naututilW.lo ;
+ naututilW.lo : nauty.h naututil.h nausparse.h gtools.h naututil.c
+ 	${CCOBJ} ${W} naututil.c
+-naututilW1.o : naututilW1.lo ;
++naututilW1.$(OBJEXT) : naututilW1.lo ;
+ naututilW1.lo : nauty.h naututil.h nausparse.h gtools.h naututil.c
+ 	${CCOBJ} ${W1} naututil.c
+-naututilL.o : naututilL.lo ;
++naututilL.$(OBJEXT) : naututilL.lo ;
+ naututilL.lo : nauty.h naututil.h nausparse.h gtools.h naututil.c
+ 	${CCOBJ} ${L} naututil.c
+-naututilL1.o : naututilL1.lo ;
++naututilL1.$(OBJEXT) : naututilL1.lo ;
+ naututilL1.lo : nauty.h naututil.h nausparse.h gtools.h naututil.c
+ 	${CCOBJ} ${L1} naututil.c
+-naututilQ.o : naututilQ.lo ;
++naututilQ.$(OBJEXT) : naututilQ.lo ;
+ naututilQ.lo : nauty.h naututil.h nausparse.h gtools.h naututil.c
+ 	${CCOBJ} ${Q} naututil.c
+-naututilQ1.o : naututilQ1.lo ;
++naututilQ1.$(OBJEXT) : naututilQ1.lo ;
+ naututilQ1.lo : nauty.h naututil.h nausparse.h gtools.h naututil.c
+ 	${CCOBJ} ${Q1} naututil.c
+ 
+-nautinv.o : nautinv.lo ;
++nautinv.$(OBJEXT) : nautinv.lo ;
+ nautinv.lo : nauty.h naututil.h nautinv.c
+ 	${CCOBJ} nautinv.c
+-nautinv1.o : nautinv1.lo ;
++nautinv1.$(OBJEXT) : nautinv1.lo ;
+ nautinv1.lo : nauty.h naututil.h nautinv.c
+ 	${CCOBJ} ${SMALL} nautinv.c
+-nautinvS.o : nautinvS.lo ;
++nautinvS.$(OBJEXT) : nautinvS.lo ;
+ nautinvS.lo : nauty.h naututil.h nautinv.c
+ 	${CCOBJ} ${S} nautinv.c
+-nautinvS1.o : nautinvS1.lo ;
++nautinvS1.$(OBJEXT) : nautinvS1.lo ;
+ nautinvS1.lo : nauty.h naututil.h nautinv.c
+ 	${CCOBJ} ${S1} nautinv.c
+-nautinvW.o : nautinvW.lo ;
++nautinvW.$(OBJEXT) : nautinvW.lo ;
+ nautinvW.lo : nauty.h naututil.h nautinv.c
+ 	${CCOBJ} ${W} nautinv.c 
+-nautinvW1.o : nautinvW1.lo ;
++nautinvW1.$(OBJEXT) : nautinvW1.lo ;
+ nautinvW1.lo : nauty.h naututil.h nautinv.c
+ 	${CCOBJ} ${W1} nautinv.c
+-nautinvL.o : nautinvL.lo ;
++nautinvL.$(OBJEXT) : nautinvL.lo ;
+ nautinvL.lo : nauty.h naututil.h nautinv.c
+ 	${CCOBJ} ${L} nautinv.c
+-nautinvL1.o : nautinvL1.lo ;
++nautinvL1.$(OBJEXT) : nautinvL1.lo ;
+ nautinvL1.lo : nauty.h naututil.h nautinv.c
+ 	${CCOBJ} ${L1} nautinv.c
+-nautinvQ.o : nautinvQ.lo ;
++nautinvQ.$(OBJEXT) : nautinvQ.lo ;
+ nautinvQ.lo : nauty.h naututil.h nautinv.c
+ 	${CCOBJ} ${Q} nautinv.c
+-nautinvQ1.o : nautinvQ1.lo ;
++nautinvQ1.$(OBJEXT) : nautinvQ1.lo ;
+ nautinvQ1.lo : nauty.h naututil.h nautinv.c
+ 	${CCOBJ} ${Q1} nautinv.c
+ 
+-schreier.o : schreier.lo ;
++schreier.$(OBJEXT) : schreier.lo ;
+ schreier.lo : nauty.h naurng.h schreier.h schreier.c
+ 	${CCOBJ} schreier.c
+-schreierS.o : schreierS.lo ;
++schreierS.$(OBJEXT) : schreierS.lo ;
+ schreierS.lo : nauty.h naurng.h schreier.h schreier.c
+ 	${CCOBJ} ${S} schreier.c
+-schreierW.o : schreierW.lo ;
++schreierW.$(OBJEXT) : schreierW.lo ;
+ schreierW.lo : nauty.h naurng.h schreier.h schreier.c
+ 	${CCOBJ} ${W} schreier.c
+-schreierL.o : schreierL.lo ;
++schreierL.$(OBJEXT) : schreierL.lo ;
+ schreierL.lo : nauty.h naurng.h schreier.h schreier.c
+ 	${CCOBJ} ${L} schreier.c
+-schreierQ.o : schreierQ.lo ;
++schreierQ.$(OBJEXT) : schreierQ.lo ;
+ schreierQ.lo : nauty.h naurng.h schreier.h schreier.c
+ 	${CCOBJ} ${Q} schreier.c
+ 
+-nausparse.o : nausparse.lo ;
++nausparse.$(OBJEXT) : nausparse.lo ;
+ nausparse.lo : nauty.h nausparse.h nausparse.c sorttemplates.c
+ 	${CCOBJ} nausparse.c
+-nausparseS.o : nausparseS.lo ;
++nausparseS.$(OBJEXT) : nausparseS.lo ;
+ nausparseS.lo : nauty.h nausparse.h nausparse.c sorttemplates.c
+ 	${CCOBJ} ${S} nausparse.c
+-nausparseW.o : nausparseW.lo ;
++nausparseW.$(OBJEXT) : nausparseW.lo ;
+ nausparseW.lo : nauty.h nausparse.h nausparse.c sorttemplates.c
+ 	${CCOBJ} ${W} nausparse.c
+-nausparseL.o : nausparseL.lo ;
++nausparseL.$(OBJEXT) : nausparseL.lo ;
+ nausparseL.lo : nauty.h nausparse.h nausparse.c sorttemplates.c
+ 	${CCOBJ} ${L} nausparse.c
+-nausparseQ.o : nausparseQ.lo ;
++nausparseQ.$(OBJEXT) : nausparseQ.lo ;
+ nausparseQ.lo : nauty.h nausparse.h nausparse.c sorttemplates.c
+ 	${CCOBJ} ${Q} nausparse.c
+ 
+-traces.o : traces.lo ;
++traces.$(OBJEXT) : traces.lo ;
+ traces.lo : nauty.h naurng.h schreier.h traces.h nausparse.h traces.c
+ 	${CCOBJ} traces.c
+ 
+-gtools.o : gtools.lo ;
++gtools.$(OBJEXT) : gtools.lo ;
+ gtools.lo : ${GTOOLSH} gtools.c
+ 	${CCOBJ} gtools.c
+-gtoolsS.o : gtoolsS.lo ;
++gtoolsS.$(OBJEXT) : gtoolsS.lo ;
+ gtoolsS.lo : ${GTOOLSH} gtools.c
+ 	${CCOBJ} ${S} gtools.c
+-gtoolsW.o : gtoolsW.lo ;
++gtoolsW.$(OBJEXT) : gtoolsW.lo ;
+ gtoolsW.lo : ${GTOOLSH} gtools.c
+ 	${CCOBJ} ${W} gtools.c
+-gtoolsL.o : gtoolsL.lo ;
++gtoolsL.$(OBJEXT) : gtoolsL.lo ;
+ gtoolsL.lo : ${GTOOLSH} gtools.c
+ 	${CCOBJ} ${L} gtools.c
+-gtoolsQ.o : gtoolsQ.lo ;
++gtoolsQ.$(OBJEXT) : gtoolsQ.lo ;
+ gtoolsQ.lo : ${GTOOLSH} gtools.c
+ 	${CCOBJ} ${Q} gtools.c
+ 
+-gutil1.o : gutil1.lo ;
++gutil1.$(OBJEXT) : gutil1.lo ;
+ gutil1.lo : ${GTOOLSH} gutils.h gutil1.c
+ 	${CCOBJ} gutil1.c
+-gutil1S.o : gutil1S.lo ;
++gutil1S.$(OBJEXT) : gutil1S.lo ;
+ gutil1S.lo : ${GTOOLSH} gutils.h gutil1.c
+ 	${CCOBJ} ${S} gutil1.c
+-gutil1S1.o : gutil1S1.lo ;
++gutil1S1.$(OBJEXT) : gutil1S1.lo ;
+ gutil1S1.lo : ${GTOOLSH} gutils.h gutil1.c
+ 	${CCOBJ} ${S1} gutil1.c
+-gutil1W.o : gutil1W.lo ;
++gutil1W.$(OBJEXT) : gutil1W.lo ;
+ gutil1W.lo : ${GTOOLSH} gutils.h gutil1.c
+ 	${CCOBJ} ${W} gutil1.c
+-gutil1W1.o : gutil1W1.lo ;
++gutil1W1.$(OBJEXT) : gutil1W1.lo ;
+ gutil1W1.lo : ${GTOOLSH} gutils.h gutil1.c
+ 	${CCOBJ} ${W1} gutil1.c
+-gutil1L.o : gutil1L.lo ;
++gutil1L.$(OBJEXT) : gutil1L.lo ;
+ gutil1L.lo : ${GTOOLSH} gutils.h gutil1.c
+ 	${CCOBJ} ${L} gutil1.c
+-gutil1L1.o : gutil1L1.lo ;
++gutil1L1.$(OBJEXT) : gutil1L1.lo ;
+ gutil1L1.lo : ${GTOOLSH} gutils.h gutil1.c
+ 	${CCOBJ} ${L1} gutil1.c
+-gutil1Q.o : gutil1Q.lo ;
++gutil1Q.$(OBJEXT) : gutil1Q.lo ;
+ gutil1Q.lo : ${GTOOLSH} gutils.h gutil1.c
+ 	${CCOBJ} ${Q} gutil1.c
+-gutil1Q1.o : gutil1Q1.lo ;
++gutil1Q1.$(OBJEXT) : gutil1Q1.lo ;
+ gutil1Q1.lo : ${GTOOLSH} gutils.h gutil1.c
+ 	${CCOBJ} ${Q1} gutil1.c
+ 
+-gutil2.o : gutil2.lo ;
++gutil2.$(OBJEXT) : gutil2.lo ;
+ gutil2.lo : ${GTOOLSH} gutils.h gutil2.c
+ 	${CCOBJ} gutil2.c
+-gutil2S.o : gutil2S.lo ;
++gutil2S.$(OBJEXT) : gutil2S.lo ;
+ gutil2S.lo : ${GTOOLSH} gutils.h gutil2.c
+ 	${CCOBJ} ${S} gutil2.c
+-gutil2S1.o : gutil2S1.lo ;
++gutil2S1.$(OBJEXT) : gutil2S1.lo ;
+ gutil2S1.lo : ${GTOOLSH} gutils.h gutil2.c
+ 	${CCOBJ} ${S1} gutil2.c
+-gutil2W.o : gutil2W.lo ;
++gutil2W.$(OBJEXT) : gutil2W.lo ;
+ gutil2W.lo : ${GTOOLSH} gutils.h gutil2.c
+ 	${CCOBJ} ${W} gutil2.c
+-gutil2W1.o : gutil2W1.lo ;
++gutil2W1.$(OBJEXT) : gutil2W1.lo ;
+ gutil2W1.lo : ${GTOOLSH} gutils.h gutil2.c
+ 	${CCOBJ} ${W1} gutil2.c
+-gutil2L.o : gutil2L.lo ;
++gutil2L.$(OBJEXT) : gutil2L.lo ;
+ gutil2L.lo : ${GTOOLSH} gutils.h gutil2.c
+ 	${CCOBJ} ${L} gutil2.c
+-gutil2L1.o : gutil2L1.lo ;
++gutil2L1.$(OBJEXT) : gutil2L1.lo ;
+ gutil2L1.lo : ${GTOOLSH} gutils.h gutil2.c
+ 	${CCOBJ} ${L1} gutil2.c
+-gutil2Q.o : gutil2Q.lo ;
++gutil2Q.$(OBJEXT) : gutil2Q.lo ;
+ gutil2Q.lo : ${GTOOLSH} gutils.h gutil2.c
+ 	${CCOBJ} ${Q} gutil2.c
+-gutil2Q1.o : gutil2Q1.lo ;
++gutil2Q1.$(OBJEXT) : gutil2Q1.lo ;
+ gutil2Q1.lo : ${GTOOLSH} gutils.h gutil2.c
+ 	${CCOBJ} ${Q1} gutil2.c
+ 
+-nautaux.o : nautaux.lo ;
++nautaux.$(OBJEXT) : nautaux.lo ;
+ nautaux.lo : nautaux.h nauty.h naututil.h nautaux.c
+ 	${CCOBJ} nautaux.c
+-nautauxS.o : nautauxS.lo ;
++nautauxS.$(OBJEXT) : nautauxS.lo ;
+ nautauxS.lo : nautaux.h nauty.h naututil.h nautaux.c
+ 	${CCOBJ} ${S} nautaux.c
+-nautauxW.o : nautauxW.lo ;
++nautauxW.$(OBJEXT) : nautauxW.lo ;
+ nautauxW.lo : nautaux.h nauty.h naututil.h nautaux.c
+ 	${CCOBJ} ${W} nautaux.c
+-nautauxL.o : nautauxL.lo ;
++nautauxL.$(OBJEXT) : nautauxL.lo ;
+ nautauxL.lo : nautaux.h nauty.h naututil.h nautaux.c
+ 	${CCOBJ} ${L} nautaux.c
+-nautauxQ.o : nautauxQ.lo ;
++nautauxQ.$(OBJEXT) : nautauxQ.lo ;
+ nautauxQ.lo : nautaux.h nauty.h naututil.h nautaux.c
+ 	${CCOBJ} ${Q} nautaux.c
+ 
+-gtnauty.o : gtnauty.lo ;
++gtnauty.$(OBJEXT) : gtnauty.lo ;
+ gtnauty.lo : ${GTOOLSH} gtnauty.c sorttemplates.c
+ 	${CCOBJ} gtnauty.c
+-gtnautyW1.o : gtnautyW1.lo ;
++gtnautyW1.$(OBJEXT) : gtnautyW1.lo ;
+ gtnautyW1.lo : ${GTOOLSH} gtnauty.c sorttemplates.c
+ 	${CCOBJ} ${W1} gtnauty.c
+-gtnautyW.o : gtnautyW.lo ;
++gtnautyW.$(OBJEXT) : gtnautyW.lo ;
+ gtnautyW.lo : ${GTOOLSH} gtnauty.c sorttemplates.c
+ 	${CCOBJ} ${W} gtnauty.c
+-gtnautyS1.o : gtnautyS1.lo ;
++gtnautyS1.$(OBJEXT) : gtnautyS1.lo ;
+ gtnautyS1.lo : ${GTOOLSH} gtnauty.c sorttemplates.c
+ 	${CCOBJ} ${S1} gtnauty.c
+-gtnautyS.o : gtnautyS.lo ;
++gtnautyS.$(OBJEXT) : gtnautyS.lo ;
+ gtnautyS.lo : ${GTOOLSH} gtnauty.c sorttemplates.c
+ 	${CCOBJ} ${S} gtnauty.c
+-gtnautyL1.o : gtnautyL1.lo ;
++gtnautyL1.$(OBJEXT) : gtnautyL1.lo ;
+ gtnautyL1.lo : ${GTOOLSH} gtnauty.c sorttemplates.c
+ 	${CCOBJ} ${L1} gtnauty.c
+-gtnautyL.o : gtnautyL.lo ;
++gtnautyL.$(OBJEXT) : gtnautyL.lo ;
+ gtnautyL.lo : ${GTOOLSH} gtnauty.c sorttemplates.c
+ 	${CCOBJ} ${L} gtnauty.c
+-gtnautyQ1.o : gtnautyQ1.lo ;
++gtnautyQ1.$(OBJEXT) : gtnautyQ1.lo ;
+ gtnautyQ1.lo : ${GTOOLSH} gtnauty.c sorttemplates.c
+ 	${CCOBJ} ${Q1} gtnauty.c
+-gtnautyQ.o : gtnautyQ.lo ;
++gtnautyQ.$(OBJEXT) : gtnautyQ.lo ;
+ gtnautyQ.lo : ${GTOOLSH} gtnauty.c sorttemplates.c
+ 	${CCOBJ} ${Q} gtnauty.c
+ 
+-naugroup.o : naugroup.lo ;
++naugroup.$(OBJEXT) : naugroup.lo ;
+ naugroup.lo : nauty.h naugroup.h naugroup.c
+ 	${CCOBJ} naugroup.c
+-naugroupS.o : naugroupS.lo ;
++naugroupS.$(OBJEXT) : naugroupS.lo ;
+ naugroupS.lo : nauty.h naugroup.h naugroup.c
+ 	${CCOBJ} ${S} naugroup.c
+-naugroupW.o : naugroupW.lo ;
++naugroupW.$(OBJEXT) : naugroupW.lo ;
+ naugroupW.lo : nauty.h naugroup.h naugroup.c
+ 	${CCOBJ} ${W} naugroup.c
+-naugroupL.o : naugroupL.lo ;
++naugroupL.$(OBJEXT) : naugroupL.lo ;
+ naugroupL.lo : nauty.h naugroup.h naugroup.c
+ 	${CCOBJ} ${L} naugroup.c
+-naugroupQ.o : naugroupQ.lo ;
++naugroupQ.$(OBJEXT) : naugroupQ.lo ;
+ naugroupQ.lo : nauty.h naugroup.h naugroup.c
+ 	${CCOBJ} ${Q} naugroup.c
+ 
+-nautycliquer.o : nautycliquer.lo ;
++nautycliquer.$(OBJEXT) : nautycliquer.lo ;
+ nautycliquer.lo : nauty.h nautycliquer.c nautycliquer.h
+ 	${CCOBJ} nautycliquer.c
+-nautycliquerS.o : nautycliquerS.lo ;
++nautycliquerS.$(OBJEXT) : nautycliquerS.lo ;
+ nautycliquerS.lo : nauty.h naugroup.h naugroup.c nautycliquer.c nautycliquer.h
+ 	${CCOBJ} ${S} nautycliquer.c
+-nautycliquerW.o : nautycliquerW.lo ;
++nautycliquerW.$(OBJEXT) : nautycliquerW.lo ;
+ nautycliquerW.lo : nauty.h naugroup.h naugroup.c nautycliquer.c nautycliquer.h
+ 	${CCOBJ} ${W} nautycliquer.c
+-nautycliquerL.o : nautycliquerL.lo ;
++nautycliquerL.$(OBJEXT) : nautycliquerL.lo ;
+ nautycliquerL.lo : nauty.h naugroup.h naugroup.c nautycliquer.c nautycliquer.h
+ 	${CCOBJ} ${L} nautycliquer.c
+-nautycliquerQ.o : nautycliquerQ.lo ;
++nautycliquerQ.$(OBJEXT) : nautycliquerQ.lo ;
+ nautycliquerQ.lo : nauty.h naugroup.h naugroup.c nautycliquer.c nautycliquer.h
+ 	${CCOBJ} ${Q} nautycliquer.c
+ 
+-nauchromatic.o : nauchromatic.lo ;
++nauchromatic.$(OBJEXT) : nauchromatic.lo ;
+ nauchromatic.lo : nauty.h nauchromatic.c nauchromatic.h
+ 	${CCOBJ} nauchromatic.c
+-nauchromaticS.o : nauchromaticS.lo ;
++nauchromaticS.$(OBJEXT) : nauchromaticS.lo ;
+ nauchromaticS.lo : nauty.h naugroup.h naugroup.c nauchromatic.c nauchromatic.h
+ 	${CCOBJ} ${S} nauchromatic.c
+-nauchromaticW.o : nauchromaticW.lo ;
++nauchromaticW.$(OBJEXT) : nauchromaticW.lo ;
+ nauchromaticW.lo : nauty.h naugroup.h naugroup.c nauchromatic.c nauchromatic.h
+ 	${CCOBJ} ${W} nauchromatic.c
+-nauchromaticL.o : nauchromaticL.lo ;
++nauchromaticL.$(OBJEXT) : nauchromaticL.lo ;
+ nauchromaticL.lo : nauty.h naugroup.h naugroup.c nauchromatic.c nauchromatic.h
+ 	${CCOBJ} ${L} nauchromatic.c
+-nauchromaticQ.o : nauchromaticQ.lo ;
++nauchromaticQ.$(OBJEXT) : nauchromaticQ.lo ;
+ nauchromaticQ.lo : nauty.h naugroup.h naugroup.c nauchromatic.c nauchromatic.h
+ 	${CCOBJ} ${Q} nauchromatic.c
+ 
+-nauconnect.o : nauconnect.lo ;
++nauconnect.$(OBJEXT) : nauconnect.lo ;
+ nauconnect.lo : nauty.h nauconnect.c nauconnect.h
+ 	${CCOBJ} nauconnect.c
+-nauconnectS.o : nauconnectS.lo ;
++nauconnectS.$(OBJEXT) : nauconnectS.lo ;
+ nauconnectS.lo : nauty.h naugroup.h naugroup.c nauconnect.c nauconnect.h
+ 	${CCOBJ} ${S} nauconnect.c
+-nauconnectW.o : nauconnectW.lo ;
++nauconnectW.$(OBJEXT) : nauconnectW.lo ;
+ nauconnectW.lo : nauty.h naugroup.h naugroup.c nauconnect.c nauconnect.h
+ 	${CCOBJ} ${W} nauconnect.c
+-nauconnectL.o : nauconnectL.lo ;
++nauconnectL.$(OBJEXT) : nauconnectL.lo ;
+ nauconnectL.lo : nauty.h naugroup.h naugroup.c nauconnect.c nauconnect.h
+ 	${CCOBJ} ${L} nauconnect.c
+-nauconnectQ.o : nauconnectQ.lo ;
++nauconnectQ.$(OBJEXT) : nauconnectQ.lo ;
+ nauconnectQ.lo : nauty.h naugroup.h naugroup.c nauconnect.c nauconnect.h
+ 	${CCOBJ} ${Q} nauconnect.c
+ 
+-naurng.o : naurng.lo ;
++naurng.$(OBJEXT) : naurng.lo ;
+ naurng.lo : naurng.c nauty.h
+ 	${CCOBJ} naurng.c
+ 
+@@ -576,10 +577,10 @@ libnautyQ1.la : ${LNAUTYQ1O} traces.lo gtoolsQ.lo naututilQ1.lo nautinvQ1.lo \
+ 	if [ -e .libs/libnautyQ1.a ] ; then cp .libs/libnautyQ1.a nautyQ1.a ; fi
+ 
+ clean :
+-	rm -f *.lo *.la tracesT.o nauty*.o nautil*.o naugraph*.o nausparse*.o \
+-	      naurngT.o schreier*.o nautinv*.o naututil*.o gutil1*.o gutil2*.o \
+-	      nautycliquer*.o nauchromatic*.o nauconnect*.o naurng.o \
+-	      traces.o gtools*.o gtnauty*.o naugroup*.o nautycliquer*.o \
++	rm -f *.lo *.la tracesT.$(OBJEXT) nauty*.$(OBJEXT) nautil*.$(OBJEXT) naugraph*.$(OBJEXT) nausparse*.$(OBJEXT) \
++	      naurngT.$(OBJEXT) schreier*.$(OBJEXT) nautinv*.$(OBJEXT) naututil*.$(OBJEXT) gutil1*.$(OBJEXT) gutil2*.$(OBJEXT) \
++	      nautycliquer*.$(OBJEXT) nauchromatic*.$(OBJEXT) nauconnect*.$(OBJEXT) naurng.$(OBJEXT) \
++	      traces.$(OBJEXT) gtools*.$(OBJEXT) gtnauty*.$(OBJEXT) naugroup*.$(OBJEXT) nautycliquer*.$(OBJEXT) \
+ 	      config.log config.cache config.status .libs/* \
+ 	      ${NAUTESTS} naucompare nauty*.a ${TESTPROGS}
+ 
+@@ -804,10 +805,10 @@ nautyex10 : nauty.h nautyex10.c nauty.a
+ 
+ # Libraries with thread-local storage
+ 
+-naurngT.o : naurngT.lo ;
++naurngT.$(OBJEXT) : naurngT.lo ;
+ naurngT.lo : naurng.c nauty.h
+ 	${CCOBJ} -DUSE_TLS naurng.c
+-tracesT.o : tracesT.lo ;
++tracesT.$(OBJEXT) : tracesT.lo ;
+ tracesT.lo : nauty.h naurng.h schreier.h traces.h nausparse.h traces.c
+ 	${CCOBJ} -DUSE_TLS traces.c
+ 
+-- 
+2.56.1
+

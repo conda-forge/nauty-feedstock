@@ -12,6 +12,8 @@ source:
     - popcount.patch
     - 0001-Add-missing-header-for-isatty-on-Windows.patch  # [win]
     - 0002-Fix-BitScanReverse-misuse-in-MSVC-FIRSTBITNZ.patch  # [win]
+    - 0003-Guard-unistd.h-in-POSIX-declaration-checks.patch  # [win]
+    - 0004-Use-OBJEXT-for-object-file-names.patch  # [win]
     - 0001-Disable-runtime-checks-when-cross-compiling.patch  # [build_platform != target_platform]
 
 build:

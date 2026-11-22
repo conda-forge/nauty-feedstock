@@ -1,0 +1,30 @@
+From 20c16a3b563007a4b8f34408fc69750a33d4f21a Mon Sep 17 00:00:00 2001
+From: claude <noreply@anthropic.com>
+Date: Sun, 22 Nov 2026 19:10:16 +0000
+Subject: [PATCH 1/2] Only include <unistd.h> in POSIX declaration checks if it
+ exists
+
+AC_CHECK_POSIXDECL included <unistd.h> unconditionally, so on Windows every
+check failed and gtools.h declared its own putenv(char*), which conflicts
+with UCRT's putenv(const char*).
+---
+ configure.ac | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/configure.ac b/configure.ac
+index 0447c42..6d2e139 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -40,7 +40,9 @@ AC_DEFUN([AC_CHECK_POSIXDECL],
+ #endif
+ #include <stdio.h>
+ #include <stdlib.h>
++#ifdef HAVE_UNISTD_H
+ #include <unistd.h>
++#endif
+ $3]])
+ AC_SUBST($2)])
+ 
+-- 
+2.56.1
+
