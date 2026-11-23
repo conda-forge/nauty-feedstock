@@ -1,0 +1,25 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Julian=20R=C3=BCth?= <julian.rueth@fsfe.org>
+Date: Sun, 22 Nov 2026 17:39:54 -0600
+Subject: [PATCH] Install with libtool
+
+On Windows libtool puts a wrapper in the build directory and not the
+real executable. Libtool installs the executable and not just the
+wrapper.
+---
+ makefile.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/makefile.in b/makefile.in
+index df0c5d5..1bd3195 100644
+--- a/makefile.in
++++ b/makefile.in
+@@ -1010,7 +1010,7 @@ TLSinstall : ${TLSLIBS}
+ 
+ install : all ${GLIBS}
+ 	${MKDIR_P} ${DESTDIR}${bindir} ${DESTDIR}${includedir} ${DESTDIR}${libdir} ${DESTDIR}${pkgconfigdir}
+-	${INSTALL} ${GTOOLS} ${DESTDIR}${bindir}
++	${LIBTOOL} --mode=install ${INSTALL} ${GTOOLS} ${DESTDIR}${bindir}
+ 	${INSTALL_DATA} ${GTOOLSH} nausha.h ${DESTDIR}${includedir}
+ 	${LIBTOOL} --mode=install ${INSTALL} ${GLIBS} ${DESTDIR}${libdir}
+ 	${LIBTOOL} --mode=finish ${DESTDIR}${libdir}

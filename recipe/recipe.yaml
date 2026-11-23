@@ -12,17 +12,18 @@ source:
   url: https://pallini.di.uniroma1.it/nauty${{ version | replace('.', '_') }}.tar.gz
   sha256: 9fc4edae04f88a0f5883985be3b39cf7f898fd6cc96e96b9ee25452743cc1b5b
   patches:
-    - popcount.patch
-    - if: win
-      then: 0001-Add-missing-header-for-isatty-on-Windows.patch
-    - if: win
-      then: 0002-Fix-BitScanReverse-misuse-in-MSVC-FIRSTBITNZ.patch
-    - if: win
-      then: 0003-Guard-unistd.h-in-POSIX-declaration-checks.patch
-    - if: win
-      then: 0004-Use-OBJEXT-for-object-file-names.patch
+    - 0001-Include-io.h-from-nauty.h-when-configure-finds-it.patch
+    - 0002-Drop-support-for-pre-1989-compilers.patch
+    - 0003-Fix-segfault-in-msc_bsr_.patch
+    - 0004-Only-include-unistd.h-if-it-exists.patch
+    - 0005-Use-OBJEXT-for-object-file-names.patch
+    - 0006-Trust-configure-for-128-bit-types-and-popcount-under.patch
+    - 0007-Only-use-popcnt-on-Windows-if-it-is-available.patch
+    - 0008-Trust-the-sizes-that-configure-measured-for-128-bit-.patch
+    - 0009-Skip-shortg-test-when-configure-decided-not-to-build.patch
+    - 0010-Install-with-libtool.patch
     - if: build_platform != target_platform
-      then: 0001-Disable-runtime-checks-when-cross-compiling.patch
+      then: 0011-Disable-runtime-checks-when-cross-compiling.patch
 
 build:
   number: 1

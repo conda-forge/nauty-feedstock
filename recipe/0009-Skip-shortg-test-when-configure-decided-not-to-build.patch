@@ -1,0 +1,23 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Julian=20R=C3=BCth?= <julian.rueth@fsfe.org>
+Date: Sun, 22 Nov 2026 17:39:51 -0600
+Subject: [PATCH] Skip shortg test when configure decided not to build it
+
+---
+ runalltests.in | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/runalltests.in b/runalltests.in
+index b98011c..cc059f8 100644
+--- a/runalltests.in
++++ b/runalltests.in
+@@ -134,7 +134,9 @@ runonetest "./geng -bq 9 | ./biplabg -q | ./NRswitchg -q" "" nautesto.ans
+ runonetest "./genspecialg -Q4 -q | ./addedgeg -tq | ./deledgeg -qv10" "" nautestp.ans
+ runonetest "./genktreeg -k3 -q 11 | ./complg -q" "" nautestq.ans
+ runonetest "./geng -qd5 10 | ./countg --dkk" "" nautestr.ans
++if test -n "@shortg_or_null@"; then
+ runonetest "./geng -q -D4 9 | ./ranlabg -q | ./shortg -q" "" nautests.ans
++fi
+ runonetest "./geng -q -T 10 | ./countg --N:HH" "" nautestt.ans
+ runonetest "./geng -q -TD6 10 | ./countg --NN,A" "" nautestu.ans
+ runonetest "./geng -q -TD6 10 | ./ransubg -qS765 -P9/10 | ./countg --NN,A,G,GG" "" nautestv.ans

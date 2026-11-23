@@ -1,22 +1,20 @@
-From 378689a835c91a34778417b01c36da892791014c Mon Sep 17 00:00:00 2001
-From: claude <noreply@anthropic.com>
-Date: Sun, 22 Nov 2026 19:10:16 +0000
-Subject: [PATCH 2/2] Use $(OBJEXT) for object file names
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Julian=20R=C3=BCth?= <julian.rueth@fsfe.org>
+Date: Sun, 22 Nov 2026 17:39:47 -0600
+Subject: [PATCH] Use $(OBJEXT) for object file names
 
-makefile.in hard-coded .o object names, and configure.ac set the suffix
-the program rules link against (osuffix) to .o for static builds. With
-MSVC-style compilers (clang-cl) libtool names objects .obj, so linking
-failed with LNK1181.
+When compiling with MSVC compilers on Windows (e.g., clang-cl), libtool
+names objects .obj and not .o.
 ---
  configure.ac |   2 +-
  makefile.in  | 273 ++++++++++++++++++++++++++-------------------------
  2 files changed, 138 insertions(+), 137 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
-index 6d2e139..6911eac 100644
+index b3aec38..3747146 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -574,7 +574,7 @@ AC_SUBST(have_gunzip)
+@@ -575,7 +575,7 @@ AC_SUBST(have_gunzip)
  LT_INIT
  AC_SUBST([enable_static])
  AS_IF([test "x$enable_static" = "xyes"],
@@ -592,6 +590,3 @@ index da077f0..df0c5d5 100644
  tracesT.lo : nauty.h naurng.h schreier.h traces.h nausparse.h traces.c
  	${CCOBJ} -DUSE_TLS traces.c
  
--- 
-2.56.1
-

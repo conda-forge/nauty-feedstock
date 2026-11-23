@@ -1,6 +1,6 @@
-From 79e2b103d6a752b0d2b73c07a3cdeae25d2c19a7 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Julian=20R=C3=BCth?= <julian.rueth@fsfe.org>
-Date: Fri, 12 Sep 2025 05:00:44 +0300
+Date: Sun, 22 Nov 2026 17:39:57 -0600
 Subject: [PATCH] Disable runtime checks when cross-compiling
 
 ---
@@ -8,10 +8,10 @@ Subject: [PATCH] Disable runtime checks when cross-compiling
  1 file changed, 3 insertions(+), 4 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
-index ab88e57..4597b75 100644
+index 3747146..032469e 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -351,8 +351,7 @@ AC_PROG_EGREP
+@@ -354,8 +354,7 @@ AC_PROG_EGREP
  
  dnl --check if popcnt instruction is available and desired
  AC_MSG_CHECKING(if popcnt instruction is available and requested)
@@ -21,7 +21,7 @@ index ab88e57..4597b75 100644
  
  AS_IF([test "$allow_popcnt" -eq 1],
        [have_hwpopcnt=$popsup
-@@ -456,8 +455,8 @@ echo MORECFLAGS="$MORECFLAGS"
+@@ -459,8 +458,8 @@ echo MORECFLAGS="$MORECFLAGS"
  
  dnl --check if lzcnt instruction is available and requested
  AC_MSG_CHECKING(if lzcnt instruction is available and requested)
@@ -32,6 +32,3 @@ index ab88e57..4597b75 100644
  AS_IF([test "$allow_clz" -eq 1],
        [have_hwlzcnt=$lzsup
  test -f /proc/cpuinfo && $EGREP -i "abm|bmi1" /proc/cpuinfo >/dev/null && have_hwlzcnt=1 
--- 
-2.51.0
-
