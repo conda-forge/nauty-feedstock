@@ -1,0 +1,28 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Julian=20R=C3=BCth?= <julian.rueth@fsfe.org>
+Date: Sun, 22 Nov 2026 18:37:22 -0600
+Subject: [PATCH] Trust the sizes that configure measured for 128 bit types
+
+---
+ nauty-h.in | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/nauty-h.in b/nauty-h.in
+index 4259fe3..52eb763 100644
+--- a/nauty-h.in
++++ b/nauty-h.in
+@@ -478,14 +478,9 @@ it is necessary to check they are correct.
+ #define SIZEOF_LONG_LONG @ac_cv_sizeof_long@   /* 0 if nonexistent */
+ #endif
+ 
+-#if defined(_MSC_VER)
+-#define SIZEOF_UNINT128 0
+-#define SIZEOF_UINT128_T 0
+-#else
+ /* These sizes will be 0 if the type doesn't exist or is disabled */
+ #define SIZEOF_UNINT128 @ac_cv_sizeof_unsigned___int128@
+ #define SIZEOF_UINT128_T @ac_cv_sizeof___uint128_t@ 
+-#endif
+ 
+ #if defined(_WIN64)
+ #define SIZEOF_POINTER 8

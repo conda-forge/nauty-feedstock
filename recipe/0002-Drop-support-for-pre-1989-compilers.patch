@@ -1,0 +1,40 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Julian=20R=C3=BCth?= <julian.rueth@fsfe.org>
+Date: Sun, 22 Nov 2026 18:19:24 -0600
+Subject: [PATCH] Drop support for pre-1989 compilers
+
+MSVC doesn't define __STDC__ but provides stdlib.h like any C89+
+compiler.
+---
+ showg.c | 11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
+
+diff --git a/showg.c b/showg.c
+index 4c11bde..e6642f3 100644
+--- a/showg.c
++++ b/showg.c
+@@ -52,6 +52,7 @@
+ 
+ #include <stdio.h>
+ #include <string.h>
++#include <stdlib.h>
+ 
+ /* gtools.h : General header for gtools programs. */
+ 
+@@ -141,16 +142,6 @@ int errno = 0;
+ #define alloc_error GT_ABORT
+ #define GT_ABORT(msg) do { if (msg) fprintf(stderr,"%s\n",msg); exit(1); } while (0)
+ 
+-#ifdef __STDC__
+-#include <stddef.h>
+-#include <stdlib.h>
+-#else
+-#include <sys/types.h>
+-char *calloc();
+-char *malloc();
+-char *realloc();
+-#endif
+-
+ #ifdef __alpha
+ typedef unsigned int setword;
+ #else

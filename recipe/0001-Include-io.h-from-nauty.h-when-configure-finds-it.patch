@@ -1,0 +1,54 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Julian=20R=C3=BCth?= <julian.rueth@fsfe.org>
+Date: Sun, 22 Nov 2026 18:26:12 -0600
+Subject: [PATCH] Include io.h from nauty.h when configure finds it
+
+The existing check in configure.ac
+```
+AC_CHECK_FUNC(isatty,have_isatty=1,have_isatty=0)
+```
+checks that isatty would link but it misses the io.h header that
+contains the declaration on Windows.
+---
+ configure.ac | 3 ++-
+ nauty-h.in   | 4 ++++
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index 0447c42..be69771 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -222,9 +222,10 @@ AC_EXEEXT
+ dnl Checks for header files.
+ 
+ AC_HEADER_SYS_WAIT
+-AC_CHECK_HEADERS(signal.h stddef.h unistd.h sys/types.h sys/wait.h stdlib.h string.h errno.h limits.h stdint.h endian.h)
++AC_CHECK_HEADERS(signal.h stddef.h unistd.h io.h sys/types.h sys/wait.h stdlib.h string.h errno.h limits.h stdint.h endian.h)
+ CVT_YESNO(ac_cv_header_stddef_h,header_stddef_h)
+ CVT_YESNO(ac_cv_header_unistd_h,header_unistd_h)
++CVT_YESNO(ac_cv_header_io_h,header_io_h)
+ CVT_YESNO(ac_cv_header_stdlib_h,header_stdlib_h)
+ CVT_YESNO(ac_cv_header_string_h,header_string_h)
+ CVT_YESNO(ac_cv_header_sys_wait_h,header_sys_wait_h)
+diff --git a/nauty-h.in b/nauty-h.in
+index e098678..1fd3703 100644
+--- a/nauty-h.in
++++ b/nauty-h.in
+@@ -13,6 +13,7 @@ it is necessary to check they are correct.
+ 
+ /* Check whether various headers or options are available */
+ #define HAVE_UNISTD_H  @header_unistd_h@    /* <unistd.h> */
++#define HAVE_IO_H  @header_io_h@    /* <io.h>, for isatty() on Windows */
+ #define HAVE_SYSTYPES_H  @header_sys_types_h@    /* <sys/types.h> */
+ #define HAVE_STDDEF_H  @header_stddef_h@     /* <stddef.h> */
+ #define HAVE_STDLIB_H  @header_stdlib_h@    /* <stdlib.h> */
+@@ -423,6 +424,9 @@ it is necessary to check they are correct.
+ #if HAVE_UNISTD_H && !defined(AVOID_UNISTD_H)
+ #include <unistd.h>
+ #endif
++#if HAVE_IO_H
++#include <io.h>
++#endif
+ #if HAVE_STDDEF_H
+ #include <stddef.h>
+ #endif

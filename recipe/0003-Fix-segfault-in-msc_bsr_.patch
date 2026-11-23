@@ -1,0 +1,46 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Julian=20R=C3=BCth?= <julian.rueth@fsfe.org>
+Date: Sun, 22 Nov 2026 17:39:41 -0600
+Subject: [PATCH] Fix segfault in msc_bsr_*
+
+Instead of writing a small integer into a pointer and then derefering
+that address (segfault), we subtract that small integer.
+
+This only affects Windows builds without HAVE_HWLZCNT.
+
+Fixes https://github.com/conda-forge/nauty-feedstock/issues/11.
+---
+ nauty-h.in | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/nauty-h.in b/nauty-h.in
+index 1fd3703..1175b01 100644
+--- a/nauty-h.in
++++ b/nauty-h.in
+@@ -963,20 +963,20 @@ typedef unsigned long long nauty_counter;
+ 
+ #if WORDSIZE==64 && defined(_WIN64)
+ static int msc_bsr_64(setword x) \
+-   { unsigned long *p; \
+-     _BitScanReverse64(&p,x); return 63 - *p; }
++   { unsigned long p; \
++     _BitScanReverse64(&p,x); return 63 - p; }
+ #define FIRSTBITNZ(x) (msc_bsr_64(x))
+ #elif WORDSIZE==32 
+ #pragma intrinsic(_BitScanReverse)
+ static int msc_bsr_32(setword x) \
+-   { unsigned *p; \
+-      _BitScanReverse(&p,x); return 31 - *p; }
++   { unsigned long p; \
++      _BitScanReverse(&p,x); return 31 - p; }
+ #define FIRSTBITNZ(x) (msc_bsr_32(x))
+ #elif WORDSIZE==16
+ #pragma intrinsic(_BitScanReverse)
+ static int msc_bsr_16(setword x) \
+-   { unsigned long *p; \
+-     _BitScanReverse(&p,(unsigned long)x); return 15 - *p; }
++   { unsigned long p; \
++     _BitScanReverse(&p,(unsigned long)x); return 15 - p; }
+ #define FIRSTBITNZ(x) (msc_bsr_16(x))
+ #endif  /* WORDSIZE choice */
+ 

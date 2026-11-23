@@ -1,0 +1,14 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Julian=20R=C3=BCth?= <julian.rueth@fsfe.org>
+Date: Sun, 22 Nov 2026 17:39:49 -0600
+Subject: [PATCH] Trust configure for 128-bit types and popcount under MSVC
+
+nauty.h overrode configure's answers whenever _MSC_VER was defined:
+- it forced SIZEOF_UNINT128/SIZEOF_UINT128_T to 0, although configure had
+  measured them, so with clang-cl (which has __int128) configure scheduled
+  the WORDSIZE=128 libraries and they failed to compile;
+- it used the _mm_popcnt intrinsics regardless of HAVE_HWPOPCNT, i.e. even
+  with --disable-popcnt, emitting POPCNT on CPUs that may lack it.
+
+Use the configured sizes, and the MSVC popcount intrinsics only when
+configure enabled hardware popcount.
